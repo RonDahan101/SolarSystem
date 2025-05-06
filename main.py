@@ -1,5 +1,7 @@
 import pygame
 import sys
+from planet import Planet
+from colors import *
 
 # Initialize pygame
 pygame.init()
@@ -9,42 +11,34 @@ WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Solar System")
 
-# Define colors
-BLUE = (0, 0, 255)
-WHITE = (255, 255, 255)
-
 # Clock for controlling frame rate
 clock = pygame.time.Clock()
 
-# Initial circle position
-x, y = WIDTH // 2, HEIGHT // 2
-radius = 50
-speed = 5
+def initilizePlanet():
+    # Create a planet instance
+    planets = []
+    earth = Planet("Earth", 5.972e24, 10, (WIDTH // 2, HEIGHT // 2), (0, 0), GREEN)
+    planets.append(earth)
+    return planets
 
 def main():
-    global x, y
+    background = pygame.Surface((WIDTH, HEIGHT))
+    background.fill(WHITE)
+    pygame.draw.circle(background, RED, (100, 100), 10)
+    planets = initilizePlanet()
+
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Get pressed keys
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            x -= speed
-        if keys[pygame.K_RIGHT]:
-            x += speed
-        if keys[pygame.K_UP]:
-            y -= speed
-        if keys[pygame.K_DOWN]:
-            y += speed
-
         # Clear screen
-        screen.fill(WHITE)
+        screen.blit(background, (0, 0))
 
-        # Draw circle at current position
-        pygame.draw.circle(screen, BLUE, (x, y), radius)
+        for planet in planets:
+            planet.draw(screen)
+            planet.setCoord((planet.getCoord()[0] + 1, planet.getCoord()[1] + 1))
 
         # Update display
         pygame.display.flip()
