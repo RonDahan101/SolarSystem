@@ -2,6 +2,7 @@ import pygame
 import sys
 from planet import Planet
 from colors import *
+from vector import Vector
 
 # Initialize pygame
 pygame.init()
@@ -17,7 +18,7 @@ clock = pygame.time.Clock()
 def initilizePlanet():
     # Create a planet instance
     planets = []
-    earth = Planet("Earth", 5.972e24, 10, (WIDTH // 2, HEIGHT // 2), (0, 0), GREEN)
+    earth = Planet("Earth", 5.972e24, 10, Vector(WIDTH // 2, HEIGHT // 2), Vector(0, 0), BLUE)
     planets.append(earth)
     return planets
 
@@ -38,7 +39,7 @@ def main():
 
         for planet in planets:
             planet.draw(screen)
-            planet.setCoord((planet.getCoord()[0] + 1, planet.getCoord()[1] + 1))
+            planet.setCoord(Vector(planet.getCoord().x + 1, planet.getCoord().y + 1))
 
         # Update display
         pygame.display.flip()

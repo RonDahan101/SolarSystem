@@ -14,7 +14,7 @@ class Planet:
                 f"coord={self.coord}, velocity={self.velocity}, color={self.color})")
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.color, self.coord, self.radius)
+        pygame.draw.circle(surface, self.color, (self.coord.x, self.coord.y), self.radius)
 
     def getCoord(self):
         return self.coord
