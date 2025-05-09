@@ -1,31 +1,40 @@
 import pygame
 
+from physics import Gravity
+from vector import Vector
+
 class Planet:
-    def __init__(self, name, mass, radius, coord, velocity, color):
+    def __init__(self, name, mass, radius, pos, velocity, color):
         self.name = name
         self.mass = mass
         self.radius = radius
-        self.coord = coord  # Expected as a tuple (x, y)
+        self.pos = pos  # Expected as a tuple (x, y)
         self.velocity = velocity  # Expected as a tuple (vx, vy)
         self.color = color
 
     def __repr__(self):
         return (f"Planet(name={self.name}, mass={self.mass}, "
-                f"coord={self.coord}, velocity={self.velocity}, color={self.color})")
+                f"pos={self.pos}, velocity={self.velocity}, color={self.color})")
 
     def draw(self, surface):
-        pygame.draw.circle(surface, self.color, (self.coord.x, self.coord.y), self.radius)
+        info = pygame.display.Info()
+        WIDTH, HEIGHT = info.current_w, info.current_h
+        new_pos = self.pos * 0.000000005 + Vector((WIDTH - 100) // 2, (HEIGHT // 2))
+        pygame.draw.circle(surface, self.color, (new_pos.x, new_pos.y), self.radius * 0 + 10)
 
-    def getCoord(self):
-        return self.coord
+    def getPos(self):
+        return self.pos
 
-    def setCoord(self, new_coord):
-        self.coord = new_coord
+    def setPos(self, new_pos):
+        self.pos = new_pos
 
-    # def update_position(self, dt):
-    #     # Update the planet's position based on its velocity and time delta
-    #     x, y = self.coord
-    #     vx, vy = self.velocity
-    #     x += vx * dt
-    #     y += vy * dt
-    #     self.coord = (x, y)
+    def update(self, planets, dt):
+        # Calculate gravitational forces and update velocity
+        force = Vector(0, 0)
+        for planet in planets:
+            force += Gravity(self, planet)
+        # Update velocity based on the force and mass
+        acceleration = force / self.mass
+        self.velocity += acceleration * dt
+        # Update the planet's position based on its velocity and time delta
+        self.pos += self.velocity * dt
